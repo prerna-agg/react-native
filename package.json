@@ -33,6 +33,7 @@
     "@types/react-native": "~0.61.23",
     "babel-preset-expo": "~8.1.0",
     "jest-expo": "~37.0.0",
+    "react-navigation-drawer": "^2.4.13",
     "typescript": "~3.8.3"
   },
   "jest": {
