@@ -15,6 +15,7 @@ const mapStateToProps = (state) => {
 
 function RenderItem(props) {
 	const item = props.item;
+
 	if (item != null) {
 		return (
 			<Card
@@ -40,6 +41,7 @@ class Home extends Component {
 			<ScrollView>
 				<RenderItem
 					item={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
+					errMsg={this.props.dishes.errMess}
 				/>
 				<RenderItem
 					item={

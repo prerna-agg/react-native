@@ -35,7 +35,7 @@ class AboutUs extends Component {
 		title: 'About Us',
 	};
 	render() {
-		const renderLeaderItem = ({ item, index }) => {
+		const renderLeader = ({ item, index }) => {
 			return (
 				<ListItem
 					key={item}
