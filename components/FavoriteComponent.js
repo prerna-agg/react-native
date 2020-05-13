@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, View, Text } from 'react-native';
+import { FlatList, View, Text, Alert } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { Loading } from './LoadingComponent';
@@ -27,15 +27,24 @@ class Favorites extends Component {
 		const { navigate } = this.props.navigation;
 
 		const renderMenuItem = ({ item, index }) => {
+			const rightButton = [
+				{
+					text: 'Delete',
+					type: 'delete',
+					onPress: () => this.props.deleteFavorite(item.id),
+				},
+			];
 			return (
-				<ListItem
-					key={index}
-					title={item.name}
-					subtitle={item.description}
-					hideChevron={true}
-					onPress={() => navigate('Dishdetail', { dishId: item.id })}
-					leftAvatar={{ source: { uri: baseUrl + item.image } }}
-				/>
+				<Swipeout right={rightButton} autoClose={true}>
+					<ListItem
+						key={index}
+						title={item.name}
+						subtitle={item.description}
+						hideChevron={true}
+						onPress={() => navigate('Dishdetail', { dishId: item.id })}
+						leftAvatar={{ source: { uri: baseUrl + item.image } }}
+					/>
+				</Swipeout>
 			);
 		};
 
@@ -48,25 +57,14 @@ class Favorites extends Component {
 				</View>
 			);
 		} else {
-			const rightButton = [
-				{
-					text: 'Delete',
-					type: 'delete',
-					onPress: () => this.props.deleteFavorite(item.id),
-				},
-			];
-
 			return (
-				<Swipeout right={rightButton} autoClose={true}>
-					<ListItem
-						key={index}
-						title={item.name}
-						subtitle={item.description}
-						hideChevron={true}
-						onPress={() => navigate('Dishdetail', { dishId: item.id })}
-						leftAvatar={{ source: { uri: baseUrl + item.image } }}
-					/>
-				</Swipeout>
+				<FlatList
+					data={this.props.dishes.dishes.filter((dish) =>
+						this.props.favorites.some((el) => el === dish.id)
+					)}
+					renderItem={renderMenuItem}
+					keyExtractor={(item) => item.id.toString()}
+				/>
 			);
 		}
 	}
