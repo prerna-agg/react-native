@@ -165,3 +165,33 @@ export const addFavorite = (dishId) => ({
 	type: ActionTypes.ADD_FAVORITE,
 	payload: dishId,
 });
+
+export const postComment = (rating, author, comment, dishId, commentId) => (
+	dispatch
+) => {
+	const newComment = {
+		id: commentId,
+		dishId: dishId,
+		rating: rating,
+		comment: comment,
+		author: author,
+		date: new Date().toISOString(),
+	};
+	return fetch(baseUrl + 'comments', {
+		method: 'POST',
+		body: JSON.stringify(newComment),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		credentials: 'same-origin',
+	}).then((response) => {
+		setTimeout(() => {
+			dispatch(addComment(newComment));
+		}, 2000);
+	});
+};
+
+export const addComment = (newComment) => ({
+	type: ActionTypes.ADD_COMMENT,
+	payload: newComment,
+});

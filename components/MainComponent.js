@@ -4,6 +4,7 @@ import Dishdetail from './DishdetailComponent';
 import Home from './HomeComponent';
 import ContactUs from './ContactComponent';
 import AboutUs from './AboutComponent';
+import Favorites from './FavoriteComponent';
 import {
 	View,
 	Platform,
@@ -41,6 +42,31 @@ const mapDispatchToProps = (dispatch) => ({
 	fetchPromos: () => dispatch(fetchPromos()),
 	fetchLeaders: () => dispatch(fetchLeaders()),
 });
+
+const FavoritesNavigator = createStackNavigator(
+	{
+		Favorites: { screen: Favorites },
+	},
+	{
+		navigationOptions: ({ navigation }) => ({
+			headerStyle: {
+				backgroundColor: '#512DA8',
+			},
+			headerTitleStyle: {
+				color: '#fff',
+			},
+			headerTintColor: '#fff',
+			headerLeft: (
+				<Icon
+					name='menu'
+					size={24}
+					iconStyle={{ color: 'white' }}
+					onPress={() => navigation.navigate('DrawerToggle')}
+				/>
+			),
+		}),
+	}
+);
 
 const ReservationNavigator = createStackNavigator(
 	{
@@ -267,6 +293,21 @@ const MainNavigator = createDrawerNavigator(
 				drawerIcon: ({ tintColor, focused }) => (
 					<Icon
 						name='cutlery'
+						type='font-awesome'
+						size={24}
+						iconStyle={{ color: tintColor }}
+					/>
+				),
+			},
+		},
+		Favorites: {
+			screen: FavoritesNavigator,
+			navigationOptions: {
+				title: 'My Favorites',
+				drawerLabel: 'My Favorites',
+				drawerIcon: ({ tintColor, focused }) => (
+					<Icon
+						name='heart'
 						type='font-awesome'
 						size={24}
 						iconStyle={{ color: tintColor }}
