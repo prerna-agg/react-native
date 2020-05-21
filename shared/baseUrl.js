@@ -9,3 +9,4 @@
 export const baseUrl = 'http://192.168.100.23:3002/';
 
 //json-server --watch db.json -p 3002 -d 2000 -H Your ipv4 address
+//ipconfig to know ipv4 address
