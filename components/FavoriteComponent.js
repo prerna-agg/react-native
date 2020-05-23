@@ -24,6 +24,12 @@ class Favorites extends Component {
 		title: 'My Favorites',
 	};
 
+	componentDidMount() {
+		console.log(
+			'Favorites mounted .............................................'
+		);
+	}
+
 	render() {
 		const { navigate } = this.props.navigation;
 
