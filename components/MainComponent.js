@@ -13,7 +13,9 @@ import {
 	StyleSheet,
 	ScrollView,
 	Text,
+	ToastAndroid,
 } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer, SafeAreaView } from 'react-navigation';
 import Constants from 'expo-constants';
@@ -373,7 +375,78 @@ class Main extends Component {
 		this.props.fetchComments();
 		this.props.fetchPromos();
 		this.props.fetchLeaders();
+
+		NetInfo.fetch().then((connectionInfo) => {
+			ToastAndroid.show(
+				'Initial Network Connectivity Type: ' +
+					connectionInfo.type +
+					', effectiveType: ' +
+					connectionInfo.effectiveType,
+				ToastAndroid.LONG
+			);
+		});
+
+		// NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
+		NetInfo.addEventListener((connectionInfo) => {
+			switch (connectionInfo.type) {
+				case 'none':
+					ToastAndroid.show('You are now offline!', ToastAndroid.LONG);
+					break;
+				case 'wifi':
+					ToastAndroid.show(
+						'You are now connected to WiFi!',
+						ToastAndroid.LONG
+					);
+					break;
+				case 'cellular':
+					ToastAndroid.show(
+						'You are now connected to Cellular!',
+						ToastAndroid.LONG
+					);
+					break;
+				case 'unknown':
+					ToastAndroid.show(
+						'You now have unknown connection!',
+						ToastAndroid.LONG
+					);
+					break;
+				default:
+					break;
+			}
+		});
 	}
+
+	componentWillUnmount() {
+		NetInfo.removeEventListener(
+			'connectionChange',
+			this.handleConnectivityChange
+		);
+	}
+
+	// handleConnectivityChange = (connectionInfo) => {
+	// 	switch (connectionInfo.type) {
+	// 		case 'none':
+	// 			ToastAndroid.show('You are now offline!', ToastAndroid.LONG);
+	// 			break;
+	// 		case 'wifi':
+	// 			ToastAndroid.show('You are now connected to WiFi!', ToastAndroid.LONG);
+	// 			break;
+	// 		case 'cellular':
+	// 			ToastAndroid.show(
+	// 				'You are now connected to Cellular!',
+	// 				ToastAndroid.LONG
+	// 			);
+	// 			break;
+	// 		case 'unknown':
+	// 			ToastAndroid.show(
+	// 				'You now have unknown connection!',
+	// 				ToastAndroid.LONG
+	// 			);
+	// 			break;
+	// 		default:
+	// 			break;
+	// 	}
+	// };
 	render() {
 		return (
 			<View
