@@ -6,8 +6,8 @@ import * as SecureStore from 'expo-secure-store';
 import * as Permissions from 'expo-permissions';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { baseUrl } from '../shared/baseUrl';
-import * as ImagePicker from 'expo-image-picker';
 import { NavigationContainer } from '@react-navigation/native';
+import * as ImagePicker from 'expo-image-picker';
 
 class LoginTab extends Component {
 	constructor(props) {
