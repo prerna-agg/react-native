@@ -195,6 +195,35 @@ class RegisterTab extends Component {
 			).catch((error) => console.log('Could not save user info', error));
 	}
 
+	getImageFromGallery = async () => {
+		const cameraPermission = await Permissions.askAsync(Permissions.CAMERA);
+		const cameraRollPermission = await Permissions.askAsync(
+			Permissions.CAMERA_ROLL
+		);
+
+		if (
+			cameraPermission.status === 'granted' &&
+			cameraRollPermission.status === 'granted'
+		) {
+			try {
+				let capturedImage = await ImagePicker.launchImageLibraryAsync({
+					mediaTypes: ImagePicker.MediaTypeOptions.All,
+					allowsEditing: true,
+					aspect: [4, 3],
+					quality: 1,
+				});
+				if (!capturedImage.cancelled) {
+					console.log(capturedImage);
+					this.processImage(capturedImage.uri);
+				}
+
+				console.log(result);
+			} catch (E) {
+				console.log(E);
+			}
+		}
+	};
+
 	render() {
 		return (
 			<ScrollView>
@@ -206,6 +235,7 @@ class RegisterTab extends Component {
 							style={styles.image}
 						/>
 						<Button title='Camera' onPress={this.getImageFromCamera} />
+						<Button title='Library' onPress={this.getImageFromGallery} />
 					</View>
 					<Input
 						placeholder='Username'

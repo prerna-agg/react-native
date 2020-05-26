@@ -14,6 +14,7 @@ import DatePicker from 'react-native-datepicker';
 import * as Animatable from 'react-native-animatable';
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
+import * as Calendar from 'expo-calendar';
 
 class Reservation extends Component {
 	constructor(props) {
@@ -53,14 +54,40 @@ class Reservation extends Component {
 				},
 				{
 					text: 'OK',
-					onPress: () => {
+					onPress: async () => {
 						this.presentLocalNotification(this.state.date);
+						const permission = await this.obtainCalenderPermission();
+						if (permission.status === 'granted') {
+							await this.addReservationToCalendar(this.state.date);
+						}
 						this.resetForm();
 					},
 				},
 			],
 			{ cancelable: false }
 		);
+	};
+
+	obtainCalenderPermission = async () => {
+		const calenderPermission = await Permissions.askAsync(Permissions.CALENDAR);
+		return calenderPermission;
+	};
+
+	addReservationToCalendar = async (date) => {
+		const defaultCalendarSource =
+			Platform.OS === 'ios'
+				? await getDefaultCalendarSource()
+				: await Calendar.getCalendarsAsync();
+
+		const saved = await Calendar.createEventAsync(defaultCalendarSource[0].id, {
+			title: 'Con Fusion Table Reservation',
+			timeZone: 'Asia/Hong_Kong',
+			location:
+				'121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong',
+			startDate: new Date(Date.parse(date)).toISOString(),
+			endDate: new Date(Date.parse(date) + 2 * 60 * 60 * 1000).toISOString(),
+		});
+		console.log(saved);
 	};
 
 	async obtainNotificationPermission() {
@@ -167,35 +194,6 @@ class Reservation extends Component {
 							color='#512DA8'
 						/>
 					</View>
-					{/* <Modal
-						animationType={'slide'}
-						transparent={false}
-						visible={this.state.showModal}
-						onDismiss={() => this.toggleModal()}
-						onRequestClose={() => this.toggleModal()}
-					>
-						<View style={styles.modal}>
-							<Text style={styles.modalTitle}>Your Reservation</Text>
-							<Text style={styles.modalText}>
-								Number of Guests: {this.state.guests}
-							</Text>
-							<Text style={styles.modalText}>
-								Smoking?: {this.state.smoking ? 'Yes' : 'No'}
-							</Text>
-							<Text style={styles.modalText}>
-								Date and Time: {this.state.date}
-							</Text>
-
-							<Button
-								onPress={() => {
-									this.toggleModal();
-									this.resetForm();
-								}}
-								color='#512DA8'
-								title='Close'
-							/>
-						</View>
-					</Modal> */}
 				</Animatable.View>
 			</ScrollView>
 		);
